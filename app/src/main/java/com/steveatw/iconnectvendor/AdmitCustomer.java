@@ -21,12 +21,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -50,7 +52,10 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
     private CompoundButton useFlash;
     private TextView statusMessage;
     private TextView barcodeValue;
-
+    private Context mContext;
+    private String firebase_token;
+    private String admitUrl = "http://192.168.0.174:8080/admit";
+    private String checkApprovalUrl= "http://192.168.0.174:8080/checkapproval";
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "BarcodeMain";
 
@@ -118,8 +123,7 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
                     Snackbar.make(findViewById(R.id.admit_customer_relative_layout), "barcode detected",
                             Snackbar.LENGTH_LONG)
                             .show();
-                    barcodeValue.setText(barcode.displayValue);
-                    admitCustomer(barcode);
+                    setApproval(barcode);
                     Log.d(TAG, "Barcode read: " + barcode.displayValue);
                 } else {
                     statusMessage.setText("barcode_failure");
@@ -137,12 +141,12 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
 
 
     private void admitCustomer(Barcode barcode){
-        String uuid = barcode.displayValue;
+        String firebase_token = barcode.displayValue;
         Context mContext = getApplicationContext();
-        String url = "http://192.168.0.174:8080/admit";
+
         try {
             JSONObject customer_detail_json = new JSONObject();
-            customer_detail_json.put("uuid", uuid);
+            customer_detail_json.put("firebase_token", firebase_token);
 
 
             // Initialize a new RequestQueue instance
@@ -151,7 +155,7 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
             // Initialize a new JsonObjectRequest instance
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.POST,
-                    url,
+                    admitUrl,
                     customer_detail_json,
                     new Response.Listener<JSONObject>() {
                         @Override
@@ -160,11 +164,11 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
                             // Process the JSON
                             try{
                                 // Get the JSON array
-                                String uuid = response.getString("uuid");
-
+                                String name = response.getString("name");
+                                barcodeValue.setText(name);
 
                                 //startActivity(intent);
-                                finish();
+                                //finish();
                             }catch (JSONException e){
                                 e.printStackTrace();
                             }
@@ -183,11 +187,67 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
                     }
             );
 
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             // Add JsonObjectRequest to the RequestQueue
             requestQueue.add(jsonObjectRequest);
 
             Log.d("output", customer_detail_json.toString(2));
         } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setApproval(final Barcode barcode){
+
+        firebase_token = barcode.displayValue;
+        mContext = getApplicationContext();
+        try{
+
+            JSONObject customer_detail_json = new JSONObject();
+            customer_detail_json.put("firebase_token", firebase_token);
+
+            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
+
+            // Initialize a new JsonObjectRequest instance
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.POST,
+                    checkApprovalUrl,
+                    customer_detail_json,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            // Do something with response
+                            // Process the JSON
+
+                            // Get the JSON array
+                            if(response.has("error")){
+                                //not approved
+                                barcodeValue.setText("Profile not approved");
+                            }
+                            else{
+                                admitCustomer(barcode);
+                            }
+
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error){
+                            Snackbar.make(
+                                    findViewById(R.id.admit_customer_relative_layout),
+                                    "Error."+error,
+                                    Snackbar.LENGTH_LONG
+                            ).show();
+                        }
+                    }
+            );
+
+            // Add JsonObjectRequest to the RequestQueue
+            requestQueue.add(jsonObjectRequest);
+        }catch (JSONException e) {
             e.printStackTrace();
         }
     }
