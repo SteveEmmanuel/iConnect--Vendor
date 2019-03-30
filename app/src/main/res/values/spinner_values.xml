@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="customer_types">
+        <item>Approved</item>
+        <item>Unapproved</item>
+        <item>All</item>
+    </string-array>
+</resources>

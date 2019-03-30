@@ -1,22 +1,5 @@
 package com.steveatw.iconnectvendor;
 
-/*
- * Copyright (C) The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,7 +36,6 @@ public class VerifyCustomer extends Activity implements View.OnClickListener {
     private TextView barcodeValue;
     private Context mContext;
     private String firebase_token;
-    private String admitUrl = "http://192.168.0.174:8080/admit";
     private String checkApprovalUrl= "http://192.168.0.174:8080/checkapproval";
     private static final int RC_BARCODE_CAPTURE = 9001;
     private static final String TAG = "BarcodeMain";
@@ -61,15 +43,10 @@ public class VerifyCustomer extends Activity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admit_customer);
-
-        statusMessage = (TextView)findViewById(R.id.status_message);
-        barcodeValue = (TextView)findViewById(R.id.barcode_value);
-
-        autoFocus = (CompoundButton) findViewById(R.id.auto_focus);
-        useFlash = (CompoundButton) findViewById(R.id.use_flash);
+        setContentView(R.layout.activity_verify_customer);
 
         findViewById(R.id.read_barcode).setOnClickListener(this);
+        findViewById(R.id.manual_admit).setOnClickListener(this);
     }
 
     /**
@@ -82,12 +59,18 @@ public class VerifyCustomer extends Activity implements View.OnClickListener {
         if (v.getId() == R.id.read_barcode) {
             // launch barcode activity.
             Intent intent = new Intent(this, BarcodeCaptureActivity.class);
-            intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
-            intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
+//            intent.putExtra(BarcodeCaptureActivity.AutoFocus, autoFocus.isChecked());
+//            intent.putExtra(BarcodeCaptureActivity.UseFlash, useFlash.isChecked());
 
             startActivityForResult(intent, RC_BARCODE_CAPTURE);
         }
+        if (v.getId() == R.id.manual_admit) {
+            // launch customer list selector activity.
+            Intent intent = new Intent(VerifyCustomer.this, CustomerAdmitListActivity.class);
 
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**
@@ -118,11 +101,10 @@ public class VerifyCustomer extends Activity implements View.OnClickListener {
             if (resultCode == CommonStatusCodes.SUCCESS) {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
-                    statusMessage.setText("barcode success");
                     Snackbar.make(findViewById(R.id.verify_customer_relative_layout), "barcode detected",
                             Snackbar.LENGTH_LONG)
                             .show();
-                    setApproval(barcode);
+                    setApproval(barcode.displayValue);
                     Log.d(TAG, "Barcode read: " + barcode.displayValue);
                 } else {
                     statusMessage.setText("barcode_failure");
@@ -138,70 +120,8 @@ public class VerifyCustomer extends Activity implements View.OnClickListener {
         }
     }
 
+    private void setApproval(final String firebase_token){
 
-    private void admitCustomer(Barcode barcode){
-        String firebase_token = barcode.displayValue;
-        Context mContext = getApplicationContext();
-
-        try {
-            JSONObject customer_detail_json = new JSONObject();
-            customer_detail_json.put("firebase_token", firebase_token);
-
-
-            // Initialize a new RequestQueue instance
-            RequestQueue requestQueue = Volley.newRequestQueue(mContext);
-
-            // Initialize a new JsonObjectRequest instance
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                    Request.Method.POST,
-                    admitUrl,
-                    customer_detail_json,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            // Do something with response
-                            // Process the JSON
-                            try{
-                                // Get the JSON array
-                                String name = response.getString("name");
-                                barcodeValue.setText(name);
-
-                                //startActivity(intent);
-                                //finish();
-                            }catch (JSONException e){
-                                e.printStackTrace();
-                            }
-                        }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error){
-                            // Do something when error occurred
-                            Snackbar.make(
-                                    findViewById(R.id.verify_customer_relative_layout),
-                                    "Error.",
-                                    Snackbar.LENGTH_LONG
-                            ).show();
-                        }
-                    }
-            );
-
-            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
-                    0,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            // Add JsonObjectRequest to the RequestQueue
-            requestQueue.add(jsonObjectRequest);
-
-            Log.d("output", customer_detail_json.toString(2));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void setApproval(final Barcode barcode){
-
-        firebase_token = barcode.displayValue;
         mContext = getApplicationContext();
         try{
 
@@ -224,10 +144,28 @@ public class VerifyCustomer extends Activity implements View.OnClickListener {
                             // Get the JSON array
                             if(response.has("error")){
                                 //not approved
-                                barcodeValue.setText("Profile not approved");
+                                try{
+                                    Snackbar.make(findViewById(R.id.verify_customer_relative_layout), response.getString("error"),
+                                            Snackbar.LENGTH_LONG)
+                                            .show();
+                                }catch (JSONException e){
+                                    e.printStackTrace();
+                                }
+
                             }
                             else{
-                                admitCustomer(barcode);
+                                Intent intent = new Intent(VerifyCustomer.this, AdmitCustomer.class);
+                                try {
+                                    intent.putExtra("name", response.getString("name"));
+                                    intent.putExtra("email", response.getString("email"));
+                                    intent.putExtra("phone_number", response.getString("phone_number"));
+                                    intent.putExtra("firebase_token", response.getString("firebase_token"));
+                                }
+                                catch (JSONException e){
+
+                                }
+                                startActivity(intent);
+                                finish();
                             }
 
                         }
