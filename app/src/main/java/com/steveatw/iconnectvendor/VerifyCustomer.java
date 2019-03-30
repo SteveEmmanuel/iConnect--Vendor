@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Activity;
-import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.View;
@@ -45,7 +44,7 @@ import org.json.JSONObject;
  * Main activity demonstrating how to pass extra parameters to an activity that
  * reads barcodes.
  */
-public class AdmitCustomer extends Activity implements View.OnClickListener {
+public class VerifyCustomer extends Activity implements View.OnClickListener {
 
     // use a compound button so either checkbox or switch widgets work.
     private CompoundButton autoFocus;
@@ -120,7 +119,7 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
                 if (data != null) {
                     Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
                     statusMessage.setText("barcode success");
-                    Snackbar.make(findViewById(R.id.admit_customer_relative_layout), "barcode detected",
+                    Snackbar.make(findViewById(R.id.verify_customer_relative_layout), "barcode detected",
                             Snackbar.LENGTH_LONG)
                             .show();
                     setApproval(barcode);
@@ -179,7 +178,7 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
                         public void onErrorResponse(VolleyError error){
                             // Do something when error occurred
                             Snackbar.make(
-                                    findViewById(R.id.admit_customer_relative_layout),
+                                    findViewById(R.id.verify_customer_relative_layout),
                                     "Error.",
                                     Snackbar.LENGTH_LONG
                             ).show();
@@ -237,7 +236,7 @@ public class AdmitCustomer extends Activity implements View.OnClickListener {
                         @Override
                         public void onErrorResponse(VolleyError error){
                             Snackbar.make(
-                                    findViewById(R.id.admit_customer_relative_layout),
+                                    findViewById(R.id.verify_customer_relative_layout),
                                     "Error."+error,
                                     Snackbar.LENGTH_LONG
                             ).show();
