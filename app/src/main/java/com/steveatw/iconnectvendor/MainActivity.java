@@ -93,6 +93,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
+        FragmentManager fm = getSupportFragmentManager(); // or 'getSupportFragmentManager();'
+        int count = fm.getBackStackEntryCount();
+        for(int i = 0; i < count; i++) {
+            fm.popBackStack();
+        }
+
         int id = item.getItemId();
 
         if (id == R.id.customer_list) {
