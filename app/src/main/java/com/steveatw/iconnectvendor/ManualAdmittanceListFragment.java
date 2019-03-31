@@ -1,5 +1,6 @@
 package com.steveatw.iconnectvendor;
 
+import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.net.Uri;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -83,10 +85,20 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
 
 
     private void fetchCustomers(String URL) {
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+                R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading...");
+        progressDialog.setContentView(R.layout.progress_bar);
+        progressDialog.getWindow().setGravity(Gravity.CENTER);
+        progressDialog.show();
+
         JsonArrayRequest jsonObjectRequest = new JsonArrayRequest(URL,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                        progressDialog.dismiss();
                         if (response == null) {
                             Toast.makeText(getContext(), "Couldn't fetch the contacts! Please try again.", Toast.LENGTH_LONG).show();
                             return;

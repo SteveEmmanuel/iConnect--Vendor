@@ -1,5 +1,6 @@
 package com.steveatw.iconnectvendor;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,6 +125,14 @@ public class CustomerAdmittanceFragment extends Fragment {
 
             RequestQueue requestQueue = Volley.newRequestQueue(mContext);
 
+            final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+                    R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Loading...");
+            progressDialog.setContentView(R.layout.progress_bar);
+            progressDialog.getWindow().setGravity(Gravity.CENTER);
+            progressDialog.show();
+
             // Initialize a new JsonObjectRequest instance
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                     Request.Method.POST,
@@ -131,8 +141,7 @@ public class CustomerAdmittanceFragment extends Fragment {
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            // Do something with response
-                            // Process the JSON
+                            progressDialog.dismiss();
 
                             // Get the JSON array
                             if(response.has("error")){

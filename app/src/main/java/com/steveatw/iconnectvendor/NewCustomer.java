@@ -1,5 +1,6 @@
 package com.steveatw.iconnectvendor;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -9,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,6 +87,14 @@ public class NewCustomer extends Fragment {
 
                 }
 
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity(),
+                        R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Creating User...");
+                progressDialog.setContentView(R.layout.progress_bar);
+                progressDialog.getWindow().setGravity(Gravity.CENTER);
+                progressDialog.show();
+
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
                         Request.Method.POST,
                         createCustomerURL,
@@ -109,6 +119,7 @@ public class NewCustomer extends Fragment {
                                 }
                                 else{
                                     try {
+                                        progressDialog.dismiss();
                                         ApproveCustomerFragment newFragment = new ApproveCustomerFragment();
 
                                         Bundle arguments = new Bundle();
