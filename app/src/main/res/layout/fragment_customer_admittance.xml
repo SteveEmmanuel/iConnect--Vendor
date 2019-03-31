@@ -1,23 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/verify_customer_relative_layout">
+    android:id="@+id/verify_customer_relative_layout"
+    android:weightSum="2"
+    android:orientation="vertical"
+    android:background="@color/primary">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="read_barcode"
-        android:id="@+id/read_barcode"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:paddingBottom="10dp">
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Scan Barcode"
+            android:id="@+id/read_barcode"
+            android:background="@drawable/rounded_button"
+            android:layout_alignParentBottom="true"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp">
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Admit Manually"
+            android:id="@+id/manual_admit"
+            android:background="@drawable/rounded_button"/>
+    </RelativeLayout>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="admit_barcode"
-        android:id="@+id/manual_admit"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
 
-</RelativeLayout>
+
+
+
+</LinearLayout>
