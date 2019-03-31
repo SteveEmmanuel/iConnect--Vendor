@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,6 +65,8 @@ public class AdmitListFragment extends Fragment implements CustomerAdapter.Custo
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_customer_list, container, false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Customers Admitted");
 
         admittedCustomersURL = getResources().getString(R.string.admittedCustomersURL);
 

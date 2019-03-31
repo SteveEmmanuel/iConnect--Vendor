@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,8 @@ public class ManualAdmittanceFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_manual_admittance, container, false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Customer Details");
 
         name = view.findViewById(R.id.name);
         email = view.findViewById(R.id.email);

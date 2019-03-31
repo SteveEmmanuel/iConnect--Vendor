@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,6 +51,9 @@ public class CustomerAdmittanceFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_customer_admittance, container, false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Admit Customer");
+
         checkApprovalUrl = getString(R.string.checkApprovalUrl);
 
         read_barcode = view.findViewById(R.id.read_barcode);

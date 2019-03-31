@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,8 @@ public class ApproveCustomerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_approve_customer, container, false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Customer Details");
 
         approveUrl = getResources().getString(R.string.approveUrl);
         rejectUrl = getResources().getString(R.string.rejectUrl);

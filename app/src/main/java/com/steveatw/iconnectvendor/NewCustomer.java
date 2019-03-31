@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,8 @@ public class NewCustomer extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_new_customer, container, false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Create customer");
 
         createCustomerURL = getString(R.string.createCustomerURL);
 

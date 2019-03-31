@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,6 +62,8 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_manual_admittance_list, container, false);
+
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Admission List");
 
         getadmiteligiblecustomerlist = getResources().getString(R.string.getadmiteligiblecustomerlist);
 
