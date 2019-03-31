@@ -140,6 +140,7 @@ public class CustomerListFragment extends Fragment implements CustomerAdapter.Cu
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        if(menu!=null){menu.clear();}
         menuInflater.inflate(R.menu.menu_spinner, menu);
 
         // Associate searchable configuration with the SearchView

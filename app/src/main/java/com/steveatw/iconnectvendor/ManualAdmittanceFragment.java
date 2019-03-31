@@ -74,7 +74,7 @@ public class ManualAdmittanceFragment extends Fragment {
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ManualAdmittanceListFragment newFragment = new ManualAdmittanceListFragment();
+                AdmitListFragment newFragment = new AdmitListFragment();
 
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment, newFragment, "ManualAdmittanceListFragment");

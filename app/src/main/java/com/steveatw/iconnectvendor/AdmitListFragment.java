@@ -77,18 +77,18 @@ public class AdmitListFragment extends Fragment implements CustomerAdapter.Custo
         recyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL, 36));
         recyclerView.setAdapter(mAdapter);
 
-//        FloatingActionButton fab = view.findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                NewCustomer newFragment = new NewCustomer();
-//
-//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                transaction.replace(R.id.fragment, newFragment, "NewCustomer");
-//                transaction.addToBackStack(null);
-//                transaction.commit();
-//            }
-//        });
+        FloatingActionButton fab = view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CustomerAdmittanceFragment newFragment = new CustomerAdmittanceFragment();
+
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment, newFragment, "CustomerAdmittanceFragment");
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
         fetchCustomers(admittedCustomersURL);
         return view;
     }
@@ -133,6 +133,7 @@ public class AdmitListFragment extends Fragment implements CustomerAdapter.Custo
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        if(menu!=null){menu.clear();}
         menuInflater.inflate(R.menu.menu_main, menu);
 
         // Associate searchable configuration with the SearchView
@@ -165,7 +166,7 @@ public class AdmitListFragment extends Fragment implements CustomerAdapter.Custo
     @Override
     public void onCustomerSelected(Customer customer) {
 
-        ApproveCustomerFragment newFragment = new ApproveCustomerFragment();
+        ManualAdmittanceFragment newFragment = new ManualAdmittanceFragment();
 
         Bundle arguments = new Bundle();
         arguments.putString("name", customer.getName());
@@ -175,7 +176,7 @@ public class AdmitListFragment extends Fragment implements CustomerAdapter.Custo
         newFragment.setArguments(arguments);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment, newFragment, "ApproveCustomerFragment");
+        transaction.replace(R.id.fragment, newFragment, "ManualAdmittanceFragment");
         transaction.addToBackStack(null);
         transaction.commit();
     }

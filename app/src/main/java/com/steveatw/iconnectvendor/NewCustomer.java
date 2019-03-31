@@ -113,7 +113,6 @@ public class NewCustomer extends Fragment {
                                         arguments.putString("email", response.getString("email"));
                                         arguments.putString("phone_number", response.getString("phone_number"));
                                         arguments.putString("firebase_token", response.getString("firebase_token"));
-                                        ;
                                         newFragment.setArguments(arguments);
 
                                         FragmentTransaction transaction = getFragmentManager().beginTransaction();

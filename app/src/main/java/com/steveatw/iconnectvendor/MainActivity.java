@@ -102,13 +102,6 @@ public class MainActivity extends AppCompatActivity
             transaction.replace(R.id.fragment, newFragment, "CustomerListFragment");
 
             transaction.commit();
-        } else if (id == R.id.admit_customer) {
-            CustomerAdmittanceFragment newFragment = new CustomerAdmittanceFragment();
-
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment, newFragment, "CustomerAdmittanceFragment");
-
-            transaction.commit();
         }
         else if (id == R.id.admit_list) {
             AdmitListFragment newFragment = new AdmitListFragment();

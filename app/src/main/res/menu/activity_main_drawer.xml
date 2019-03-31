@@ -9,10 +9,6 @@
             android:title="View Customer List"
             android:icon="@drawable/list"/>
         <item
-            android:id="@+id/admit_customer"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Admit Customer" />
-        <item
             android:id="@+id/admit_list"
             android:icon="@drawable/admit_list"
             android:title="Admit List" />

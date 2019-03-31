@@ -60,7 +60,7 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_customer_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_manual_admittance_list, container, false);
 
         getadmiteligiblecustomerlist = getResources().getString(R.string.getadmiteligiblecustomerlist);
 
@@ -118,6 +118,7 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        if(menu!=null){menu.clear();}
         menuInflater.inflate(R.menu.menu_main, menu);
 
         // Associate searchable configuration with the SearchView
