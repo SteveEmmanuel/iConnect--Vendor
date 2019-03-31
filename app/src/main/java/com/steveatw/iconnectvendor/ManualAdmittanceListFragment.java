@@ -100,7 +100,7 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
                     public void onResponse(JSONArray response) {
                         progressDialog.dismiss();
                         if (response == null) {
-                            Toast.makeText(getContext(), "Couldn't fetch the contacts! Please try again.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Couldn't fetch the customers! Please try again.", Toast.LENGTH_LONG).show();
                             return;
                         }
 
