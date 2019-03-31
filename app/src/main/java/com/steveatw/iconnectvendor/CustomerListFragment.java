@@ -196,23 +196,6 @@ public class CustomerListFragment extends Fragment implements CustomerAdapter.Cu
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-
-
-    @Override
     public void onCustomerSelected(Customer customer) {
 
         ApproveCustomerFragment newFragment = new ApproveCustomerFragment();
@@ -228,12 +211,6 @@ public class CustomerListFragment extends Fragment implements CustomerAdapter.Cu
         transaction.replace(R.id.fragment, newFragment, "ApproveCustomerFragment");
         transaction.addToBackStack(null);
         transaction.commit();
-    }
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onCustomerListFragmentInteraction(uri);
-        }
     }
 
     @Override
