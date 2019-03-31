@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".AdmitCustomer"
     android:id="@+id/approve_customer_relative_layout">
 
     <TextView
@@ -23,11 +22,13 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/approve"/>
+        android:id="@+id/admit"
+        android:text="Admit"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/reject"/>
+        android:id="@+id/reject"
+        android:text="Reject"/>
 
 
 </LinearLayout>

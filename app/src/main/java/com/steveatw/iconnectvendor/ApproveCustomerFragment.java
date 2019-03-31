@@ -2,11 +2,15 @@ package com.steveatw.iconnectvendor;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,51 +25,63 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ApproveCustomer extends AppCompatActivity {
+
+public class ApproveCustomerFragment extends Fragment {
 
     private TextView name, email, phone_number;
     private Button approve, reject;
 
-    private final String approveUrl = "http://192.168.0.174:8080/grantapproval";
-    private final String rejectUrl = "http://192.168.0.174:8080/rejectapproval";
+    private String approveUrl;
+    private String rejectUrl;
+
+    private OnFragmentInteractionListener mListener;
+
+    public ApproveCustomerFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_approve_customer);
+    }
 
-        name = findViewById(R.id.name);
-        email = findViewById(R.id.email);
-        phone_number = findViewById(R.id.phone_number);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_approve_customer, container, false);
 
-        approve = findViewById(R.id.approve);
-        reject = findViewById(R.id.reject);
+        approveUrl = getResources().getString(R.string.approveUrl);
+        rejectUrl = getResources().getString(R.string.rejectUrl);
 
-        final Intent intent = getIntent();
+        name = view.findViewById(R.id.name);
+        email = view.findViewById(R.id.email);
+        phone_number = view.findViewById(R.id.phone_number);
 
-        name.setText(intent.getStringExtra("name"));
-        email.setText(intent.getStringExtra("email"));
-        phone_number.setText(intent.getStringExtra("phone_number"));
+        approve = view.findViewById(R.id.approve);
+        reject = view.findViewById(R.id.reject);
+
+        name.setText(getArguments().getString("name"));
+        email.setText(getArguments().getString("email"));
+        phone_number.setText(getArguments().getString("phone_number"));
 
         approve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeCustomerApproval(intent.getStringExtra("firebase_token"), approveUrl);
+                changeCustomerApproval(getArguments().getString("firebase_token"), approveUrl);
             }
         });
 
         reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeCustomerApproval(intent.getStringExtra("firebase_token"), rejectUrl);
+                changeCustomerApproval(getArguments().getString("firebase_token"), rejectUrl);
             }
         });
-
+        return view;
     }
 
-
     private void changeCustomerApproval(String firebase_token, String URL){
-        Context mContext = getApplicationContext();
+        Context mContext = getContext().getApplicationContext();
 
         try {
             JSONObject customer_detail_json = new JSONObject();
@@ -89,7 +105,7 @@ public class ApproveCustomer extends AppCompatActivity {
                             if(response.has("error")){
                                 //not approved
                                 try{
-                                    Snackbar.make(findViewById(R.id.approve_customer_relative_layout), response.getString("error"),
+                                    Snackbar.make(getView().findViewById(R.id.customer_list_layout), response.getString("error"),
                                             Snackbar.LENGTH_LONG)
                                             .show();
                                 }catch (JSONException e){
@@ -99,15 +115,18 @@ public class ApproveCustomer extends AppCompatActivity {
                             }
                             else{
                                 try{
-                                    Snackbar.make(findViewById(R.id.approve_customer_relative_layout), response.getString("success"),
+                                    Snackbar.make(getView().findViewById(R.id.approve_customer_relative_layout), response.getString("success"),
                                             Snackbar.LENGTH_LONG)
                                             .show();
                                 }catch (JSONException e){
                                     e.printStackTrace();
                                 }
-                                Intent intent = new Intent(ApproveCustomer.this, CustomerListActivity.class);
-                                startActivity(intent);
-                                finish();
+                                CustomerListFragment newFragment = new CustomerListFragment();
+
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.fragment, newFragment, "CustomerListFragment");
+
+                                transaction.commit();
                             }
                         }
                     },
@@ -116,7 +135,7 @@ public class ApproveCustomer extends AppCompatActivity {
                         public void onErrorResponse(VolleyError error){
                             // Do something when error occurred
                             Snackbar.make(
-                                    findViewById(R.id.approve_customer_relative_layout),
+                                    getView().findViewById(R.id.approve_customer_relative_layout),
                                     "Error.",
                                     Snackbar.LENGTH_LONG
                             ).show();
@@ -137,4 +156,43 @@ public class ApproveCustomer extends AppCompatActivity {
         }
     }
 
+
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onApproveCustomerFragmentInteraction(uri);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onApproveCustomerFragmentInteraction(Uri uri);
+    }
 }

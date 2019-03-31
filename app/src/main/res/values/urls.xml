@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="approveUrl">http://steveisredatw.pythonanywhere.com/grantapproval</string>
+    <string name="rejectUrl">http://steveisredatw.pythonanywhere.com/rejectapproval</string>
+    <string name="checkApprovalUrl">http://steveisredatw.pythonanywhere.com/checkapproval</string>
+    <string name="allCustomersURL">http://steveisredatw.pythonanywhere.com/allcustomers</string>
+    <string name="approvedCustomersURL">http://steveisredatw.pythonanywhere.com/approvedcustomers</string>
+    <string name="unapprovedCustomersURL">http://steveisredatw.pythonanywhere.com/unapprovedcustomers</string>
+    <string name="admitUrl">http://steveisredatw.pythonanywhere.com/admit</string>
+    <string name="createCustomerURL">http://steveisredatw.pythonanywhere.com/customer</string>
+    <string name="getadmiteligiblecustomerlist">http://steveisredatw.pythonanywhere.com/getadmiteligiblecustomerlist</string>
+</resources>
