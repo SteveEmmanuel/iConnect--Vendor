@@ -9,4 +9,5 @@
     <string name="admitUrl">http://steveisredatw.pythonanywhere.com/admit</string>
     <string name="createCustomerURL">http://steveisredatw.pythonanywhere.com/customer</string>
     <string name="getadmiteligiblecustomerlist">http://steveisredatw.pythonanywhere.com/getadmiteligiblecustomerlist</string>
+    <string name="admittedCustomersURL">http://steveisredatw.pythonanywhere.com/admittedcustomers</string>
 </resources>

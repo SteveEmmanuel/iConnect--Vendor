@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity
 
             transaction.commit();
         }
-        else if (id == R.id.admit_customer) {
+        else if (id == R.id.admit_list) {
             AdmitListFragment newFragment = new AdmitListFragment();
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

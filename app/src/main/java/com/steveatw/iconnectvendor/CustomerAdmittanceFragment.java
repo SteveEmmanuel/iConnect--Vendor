@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -176,7 +177,10 @@ public class CustomerAdmittanceFragment extends Fragment {
                         }
                     }
             );
-
+            jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             // Add JsonObjectRequest to the RequestQueue
             requestQueue.add(jsonObjectRequest);
         }catch (JSONException e) {

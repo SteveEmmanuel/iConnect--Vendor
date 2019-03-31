@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,9 +16,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -34,8 +37,7 @@ import org.json.JSONArray;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ManualAdmittanceListFragment extends Fragment implements CustomerAdapter.CustomerAdapterListener {
-
+public class AdmitListFragment extends Fragment implements CustomerAdapter.CustomerAdapterListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private RecyclerView recyclerView;
@@ -44,10 +46,11 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
     private SearchView searchView;
 
     // urls to fetch customer JSON json
-    private String getadmiteligiblecustomerlist;
-    private CustomerListFragment.OnFragmentInteractionListener mListener;
 
-    public ManualAdmittanceListFragment() {
+    private String admittedCustomersURL;
+    private OnFragmentInteractionListener mListener;
+
+    public AdmitListFragment() {
         // Required empty public constructor
     }
 
@@ -62,7 +65,7 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_customer_list, container, false);
 
-        getadmiteligiblecustomerlist = getResources().getString(R.string.getadmiteligiblecustomerlist);
+        admittedCustomersURL = getResources().getString(R.string.admittedCustomersURL);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         customerList = new ArrayList<>();
@@ -74,7 +77,19 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
         recyclerView.addItemDecoration(new MyDividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL, 36));
         recyclerView.setAdapter(mAdapter);
 
-        fetchCustomers(getadmiteligiblecustomerlist);
+//        FloatingActionButton fab = view.findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                NewCustomer newFragment = new NewCustomer();
+//
+//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//                transaction.replace(R.id.fragment, newFragment, "NewCustomer");
+//                transaction.addToBackStack(null);
+//                transaction.commit();
+//            }
+//        });
+        fetchCustomers(admittedCustomersURL);
         return view;
     }
 
@@ -85,7 +100,7 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
                     @Override
                     public void onResponse(JSONArray response) {
                         if (response == null) {
-                            Toast.makeText(getContext(), "Couldn't fetch the contacts! Please try again.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Couldn't fetch the customers! Pleas try again.", Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -146,10 +161,11 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
         });
     }
 
+
     @Override
     public void onCustomerSelected(Customer customer) {
 
-        ManualAdmittanceFragment newFragment = new ManualAdmittanceFragment();
+        ApproveCustomerFragment newFragment = new ApproveCustomerFragment();
 
         Bundle arguments = new Bundle();
         arguments.putString("name", customer.getName());
@@ -159,7 +175,7 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
         newFragment.setArguments(arguments);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment, newFragment, "ManualAdmittanceFragment");
+        transaction.replace(R.id.fragment, newFragment, "ApproveCustomerFragment");
         transaction.addToBackStack(null);
         transaction.commit();
     }
@@ -168,8 +184,8 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof CustomerListFragment.OnFragmentInteractionListener) {
-            mListener = (CustomerListFragment.OnFragmentInteractionListener) context;
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
@@ -181,8 +197,8 @@ public class ManualAdmittanceListFragment extends Fragment implements CustomerAd
         super.onDetach();
         mListener = null;
     }
+
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onAdmitListFragmentInteraction(Uri uri);
     }
 }

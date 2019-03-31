@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -107,7 +108,7 @@ public class CustomerListFragment extends Fragment implements CustomerAdapter.Cu
                     @Override
                     public void onResponse(JSONArray response) {
                         if (response == null) {
-                            Toast.makeText(getContext(), "Couldn't fetch the contacts! Pleas try again.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Couldn't fetch the customers! Pleas try again.", Toast.LENGTH_LONG).show();
                             return;
                         }
 
@@ -130,6 +131,10 @@ public class CustomerListFragment extends Fragment implements CustomerAdapter.Cu
             }
         });
         RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(jsonObjectRequest);
     }
 
